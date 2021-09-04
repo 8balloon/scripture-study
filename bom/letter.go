@@ -7,6 +7,6 @@ type LetterType struct {
 }
 
 type Letter struct {
-	LetterType LetterType
+	LetterType *LetterType
 	ORune      ORune
 }
