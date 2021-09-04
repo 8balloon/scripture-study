@@ -7,11 +7,11 @@ import (
 )
 
 func main() {
-	s := bom.Obfuscated("yolo!")
+	s := bom.OString("yolo!")
 	fmt.Println(string(s))
 
-	cases := bom.Case{
-		Variants: []bom.Obfuscated{s},
+	cases := bom.LetterType{
+		Variants: []bom.ORune{'Y'},
 	}
 	fmt.Println(string(cases.Variants[0]))
 }
