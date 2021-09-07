@@ -1,17 +1,9 @@
 package main
 
-import (
-	"fmt"
-
-	"github.com/8balloon/scripture-study/bom"
-)
+import "fmt"
 
 func main() {
-	s := bom.OString("yolo!")
-	fmt.Println(string(s))
+	pogpJSON := GetPOGPSJ()
 
-	cases := bom.LetterType{
-		Variants: []bom.ORune{'Y'},
-	}
-	fmt.Println(string(cases.Variants[0]))
+	fmt.Println(pogpJSON.Books[0].Book)
 }
