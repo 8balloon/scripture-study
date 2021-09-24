@@ -1,17 +1,19 @@
 package main
 
-import "math"
+import (
+	"math"
+)
 
-type Wings struct {
+type Wing struct {
 	Size     int
 	Before   map[rune]int
 	After    map[rune]int
 	Symmetry float64
 }
 
-type WingSet map[rune]Wings
+type WingSet map[rune]Wing
 
-func Cosinesim(A []int, B []int) float64 {
+func CosineSim(A []int, B []int) float64 {
 	dotproduct := 0
 	var mA float64
 	var mB float64
@@ -27,13 +29,21 @@ func Cosinesim(A []int, B []int) float64 {
 	return similarity
 }
 
-// use io.Reader/Writer?
-func GetWingSet(str string) WingSet {
+func (wset WingSet) Read(str string) {
 	runes := []rune(str)
 	lastIdx := len(runes) - 1
-	ws := make(WingSet)
 	for i, r := range runes {
-		w := ws[r]
+		w, ok := wset[r]
+		if !ok {
+			var wing Wing
+			wing.Before = make(map[rune]int)
+			wing.After = make(map[rune]int)
+			w = wing
+			// need to assign for every wing
+			// because otherwise we're just modiying
+			// a copy of the map contents
+			// wset[r]= w
+		}
 		w.Size++
 		if i > 0 {
 			prev := runes[i-1]
@@ -43,7 +53,30 @@ func GetWingSet(str string) WingSet {
 			next := runes[i+1]
 			w.After[next]++
 		}
+		wset[r] = w
 	}
 
-	return ws
+	for r, wing := range wset {
+		runeSet := make(map[rune]bool)
+		for r := range wing.Before {
+			runeSet[r] = true
+		}
+		for r := range wing.After {
+			runeSet[r] = true
+		}
+		var beforeVec []int
+		var afterVec []int
+		for r := range runeSet {
+			beforeVec = append(beforeVec, wing.Before[r])
+			afterVec = append(afterVec, wing.After[r])
+		}
+		wing.Symmetry = CosineSim(beforeVec, afterVec)
+		wset[r] = wing
+	}
+}
+
+func CreateWingSet(s string) WingSet {
+	wset := make(WingSet)
+	wset.Read(s)
+	return wset
 }
