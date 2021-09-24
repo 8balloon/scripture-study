@@ -80,3 +80,24 @@ func CreateWingSet(s string) WingSet {
 	wset.Read(s)
 	return wset
 }
+
+type DiscriminatedWingSet struct {
+	Real   WingSet
+	Unreal WingSet
+}
+
+func (ws WingSet) Discriminate() DiscriminatedWingSet {
+	real := make(WingSet)
+	unreal := make(WingSet)
+	for r, w := range ws {
+		if math.IsNaN(w.Symmetry) {
+			unreal[r] = w
+		} else {
+			real[r] = w
+		}
+	}
+	return DiscriminatedWingSet{
+		Real:   real,
+		Unreal: unreal,
+	}
+}
