@@ -4,6 +4,9 @@ import (
 	"math"
 )
 
+// size and symmetry could be methods,
+// but we're making them static fields
+// for time optimization
 type Wing struct {
 	Size     int
 	Before   map[rune]int
@@ -29,6 +32,7 @@ func CosineSim(A []int, B []int) float64 {
 	return similarity
 }
 
+// updates size and symmetry
 func (wset WingSet) Read(str string) {
 	runes := []rune(str)
 	lastIdx := len(runes) - 1
